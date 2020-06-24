@@ -4,6 +4,7 @@ import it.unibo.tuprolog.core.Truth
 import it.unibo.tuprolog.solve.*
 import it.unibo.tuprolog.solve.exception.TimeOutException
 import it.unibo.tuprolog.solve.solver.fsm.State
+import it.unibo.tuprolog.solve.solver.StreamsExecutionContext
 import it.unibo.tuprolog.solve.testutils.SolverTestUtils.createSolveRequest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -19,7 +20,7 @@ internal class AbstractTimedStateTest {
     private val behaviourResponse = emptySequence<Nothing>()
 
     /** Creates an [AbstractTimedState] instance with provided parameters, and emptySequence returning behaviour */
-    private fun createTimeState(solveRequest: Solve.Request<ExecutionContext>) =
+    private fun createTimeState(solveRequest: Solve.Request<StreamsExecutionContext>) =
         object : AbstractTimedState(solveRequest) {
             override fun behaveTimed(): Sequence<State> = behaviourResponse
         }
