@@ -3,6 +3,7 @@ package it.unibo.tuprolog.solve.solver.fsm.impl
 import it.unibo.tuprolog.solve.*
 import it.unibo.tuprolog.solve.Solve.Response
 import it.unibo.tuprolog.solve.exception.TimeOutException
+import it.unibo.tuprolog.solve.solver.StreamsExecutionContext
 import it.unibo.tuprolog.solve.solver.fsm.AbstractState
 import it.unibo.tuprolog.solve.solver.fsm.IntermediateState
 import it.unibo.tuprolog.solve.solver.fsm.State
@@ -15,7 +16,7 @@ import it.unibo.tuprolog.solve.solver.fsm.TimedState
  */
 internal abstract class AbstractTimedState(
     /** The [Solve.Request] that guides the State behaviour towards [Response]s */
-    override val solve: Solve.Request<ExecutionContext>
+    override val solve: Solve.Request<StreamsExecutionContext>
 ) : AbstractState(solve), IntermediateState, TimedState {
 
     /** Internal cached currentTime at first behave() call, enabling identical re-execution of that state */

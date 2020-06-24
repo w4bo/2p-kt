@@ -1,14 +1,14 @@
 package it.unibo.tuprolog.solve.solver.fsm
 
-import it.unibo.tuprolog.solve.ExecutionContext
 import it.unibo.tuprolog.solve.Solve
+import it.unibo.tuprolog.solve.solver.StreamsExecutionContext
 
 /**
  * Represents a State of Prolog solver state-machine
  *
  * @author Enrico
  */
-interface State {
+internal interface State {
 
     /** The [Solve.Request] or [Solve.Response] that this state carries with it */
     val solve: Solve
@@ -20,5 +20,5 @@ interface State {
     val hasBehaved: Boolean
 
     /** The state machine execution context in this state */
-    val context: ExecutionContext
+    val context: StreamsExecutionContext
 }

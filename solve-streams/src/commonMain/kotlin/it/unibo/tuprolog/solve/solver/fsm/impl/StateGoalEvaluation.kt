@@ -41,11 +41,18 @@ internal class StateGoalEvaluation(
                 responses = StreamsSolver.solveToResponses(solve.newThrowSolveRequest(prologError))
             }
 
-            responses?.forEach {
+            if (responses != null) {
+//                Uncomment the following lines to enable side effects propagation?
+//                var ctx = context
+                for (response in responses) {
 
-                yield(ifTimeIsNotOver(stateEnd(it)))
+//                    val nextState = ifTimeIsNotOver(stateEnd(response, ctx))
+                    val nextState = ifTimeIsNotOver(stateEnd(response))
+                    yield(nextState)
+//                    ctx = nextState.context
 
-                if (it.solution is Solution.Halt) return@sequence // if halt reached, overall computation should stop
+                    if (response.solution is Solution.Halt) return@sequence // if halt reached, overall computation should stop
+                }
             }
 
         } ?: yield(StateRuleSelection(solve))
