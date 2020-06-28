@@ -135,9 +135,7 @@ internal fun IntermediateState.stateEnd(
 /** Transition from this intermediate state to a [StateEnd] containing provided [response] data */
 internal fun IntermediateState.stateEnd(
     response: Solve.Response,
-    otherContext: StreamsExecutionContext? = null,
-    sideEffectManager: SideEffectManager? = null,
-    vararg sideEffects: SideEffect
+    otherContext: StreamsExecutionContext? = null
 ) = with(response) {
-    stateEnd(solution, otherContext, sideEffectManager, *sideEffects)
+    stateEnd(solution, otherContext, response.sideEffectManager, *response.sideEffects.toTypedArray())
 }

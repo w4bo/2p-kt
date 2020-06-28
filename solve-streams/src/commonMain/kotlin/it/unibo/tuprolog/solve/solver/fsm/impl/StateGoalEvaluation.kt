@@ -43,13 +43,14 @@ internal class StateGoalEvaluation(
 
             if (responses != null) {
 //                Uncomment the following lines to enable side effects propagation?
-//                var ctx = context
+                var ctx = context
                 for (response in responses) {
 
-//                    val nextState = ifTimeIsNotOver(stateEnd(response, ctx))
-                    val nextState = ifTimeIsNotOver(stateEnd(response))
+                    val nextState = ifTimeIsNotOver(stateEnd(response, ctx))
+                    @Suppress("UNUSED_VALUE")
+                    ctx = nextState.context
+//                    val nextState = ifTimeIsNotOver(stateEnd(response))
                     yield(nextState)
-//                    ctx = nextState.context
 
                     if (response.solution is Solution.Halt) return@sequence // if halt reached, overall computation should stop
                 }

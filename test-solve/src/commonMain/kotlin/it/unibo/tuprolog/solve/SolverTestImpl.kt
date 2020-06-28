@@ -129,7 +129,7 @@ internal class SolverTestImpl(private val solverFactory: SolverFactory) : Solver
                     assert("f"(3)) and
                     "f"("X")
 
-            val solutions = solver.solve(query, mediumDuration).toList()
+            val solutions = solver.solve(query, Long.MAX_VALUE).toList()
             val ints = if (inverse) (3 downTo 1) else (1..3)
 
             assertSolutionEquals(
