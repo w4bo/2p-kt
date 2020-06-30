@@ -94,6 +94,6 @@ fun Solve.Request<ExecutionContext>.replyWith(otherResponse: Solve.Response): So
         replyWith(
             solution,
             sideEffectManager ?: this@replyWith.context.getSideEffectManager(),
-            sideEffects = *otherResponse.sideEffects.toTypedArray()
+            sideEffects = *sideEffects.toTypedArray()
         )
     }
