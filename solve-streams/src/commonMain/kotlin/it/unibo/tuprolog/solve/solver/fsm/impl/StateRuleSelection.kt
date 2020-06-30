@@ -5,6 +5,7 @@ import it.unibo.tuprolog.core.Struct
 import it.unibo.tuprolog.core.Var
 import it.unibo.tuprolog.core.prepareForExecution
 import it.unibo.tuprolog.solve.*
+import it.unibo.tuprolog.solve.primitive.Solve
 import it.unibo.tuprolog.solve.solver.*
 import it.unibo.tuprolog.solve.solver.fsm.*
 import it.unibo.tuprolog.unify.Unificator.Companion.mguWith
