@@ -61,7 +61,7 @@ interface MutableSolver : Solver {
     @JsName("retractAll")
     fun retractAll(clause: Clause): RetractResult
 
-    @JsName("retractAllBeHead")
+    @JsName("retractAllByHead")
     fun retractAll(fact: Struct): RetractResult
 
     companion object {
