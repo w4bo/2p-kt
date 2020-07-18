@@ -1,9 +1,8 @@
 package it.unibo.tuprolog.theory
 
-import it.unibo.tuprolog.core.Atom
-import it.unibo.tuprolog.core.Clause
-import it.unibo.tuprolog.core.Struct
-import it.unibo.tuprolog.core.Var
+import it.unibo.tuprolog.core.*
+import it.unibo.tuprolog.testutils.ClauseAssertionUtils
+import it.unibo.tuprolog.testutils.ClauseAssertionUtils.assertClausesHaveSameLengthAndContent
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
@@ -47,5 +46,29 @@ internal class PrototypeRetractResultTest(
 
     fun failTheoryCorrect() {
         assertEquals(theory, toTestFailure.theory)
+    }
+
+    fun retractAllSupportsPatterns() {
+        val ma = Struct.of("m", Atom.of("a"))
+        var theory = emptyTheoryGenerator()
+        assertClausesHaveSameLengthAndContent(
+            emptySequence(),
+            theory.asSequence()
+        )
+        theory = theory.assertZ(ma)
+        assertClausesHaveSameLengthAndContent(
+            sequenceOf(Fact.of(ma)),
+            theory.asSequence()
+        )
+        val result = theory.retractAll(Struct.of("m", Var.anonymous()))
+        assertEquals(
+            RetractResult.Success(emptyTheoryGenerator(), listOf(Fact.of(ma))),
+            result
+        )
+        theory = result.theory
+        assertEquals(
+            RetractResult.Failure(theory),
+            theory.retractAll(ma)
+        )
     }
 }

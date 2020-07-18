@@ -36,4 +36,9 @@ internal class ListedRetractResultTest {
     fun failTheoryCorrect() {
         prototype.failTheoryCorrect()
     }
+
+    @Test
+    fun retractAllSupportsPatterns() {
+        prototype.retractAllSupportsPatterns()
+    }
 }
