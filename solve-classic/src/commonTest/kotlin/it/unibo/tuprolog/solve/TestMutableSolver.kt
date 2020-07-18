@@ -18,7 +18,7 @@ import kotlin.test.assertTrue
 
 class TestMutableSolver : SolverFactory {
     @Test
-    fun `Retract all with non-ground argument removes all matching clauses from a MutableSolver`() {
+    fun retractAllAcceptingNonGroundClausesRemovesAllMatchingClausesFromMutableSolver() {
         val solver = mutableSolverWithDefaultBuiltins()
 
         val ma = Struct.of("m", Atom.of("a"))
