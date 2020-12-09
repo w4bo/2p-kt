@@ -42,35 +42,19 @@ class JsUrl : Url {
 
     override val query: String?
 
-    override fun readAsText(): String {
+    override suspend fun readAsText(): String {
         if (isFile) {
             return readText(path)
         } else {
-            throw IOException("Reading a remote file synchronously is not supported, yet")
+            return fetchText(url)
         }
     }
 
-    override fun readAsByteArray(): ByteArray {
+    override suspend fun readAsByteArray(): ByteArray {
         if (isFile) {
             return readBin(path)
         } else {
-            throw IOException("Reading a remote file synchronously is not supported, yet")
-        }
-    }
-
-    override fun readAsTextAsync(callback: (String?, IOException?) -> Unit) {
-        if (isFile) {
-            readTextAsync(path, callback)
-        } else {
-            fetchTextAsync(toString(), callback)
-        }
-    }
-
-    override fun readAsByteArrayAsync(callback: (ByteArray?, IOException?) -> Unit) {
-        if (isFile) {
-            readBinAsync(path, callback)
-        } else {
-            fetchBinAsync(toString(), callback)
+            return fetchByteArray(url)
         }
     }
 

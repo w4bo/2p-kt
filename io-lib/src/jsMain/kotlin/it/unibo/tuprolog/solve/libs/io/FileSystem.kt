@@ -4,6 +4,7 @@ import it.unibo.tuprolog.Info
 import it.unibo.tuprolog.Platform
 import it.unibo.tuprolog.solve.libs.io.exceptions.IOException
 import kotlinx.browser.window
+import kotlinx.coroutines.await
 import org.khronos.webgl.ArrayBuffer
 import org.khronos.webgl.Uint8Array
 import org.khronos.webgl.get
@@ -71,69 +72,29 @@ private fun nodeReadBin(path: String): ByteArray =
         throw IOException("Error while reading file $path", e)
     }
 
-fun readBin(path: String): ByteArray =
+suspend fun readBin(path: String): ByteArray =
     if (Info.PLATFORM == Platform.BROWSER) {
         browserReadBin(path)
     } else {
         nodeReadBin(path)
     }
 
-@Suppress("UNUSED_PARAMETER")
-private fun browserReadTextAsync(path: String, callback: (String?, IOException?) -> Unit) =
-    callback(null, IOException("Reading a local file in browser is not supported, yet"))
-
-private fun nodeReadTextAsync(path: String, callback: (String?, IOException?) -> Unit) =
-    FS.readFile(path, READ_TEXT) { err: Throwable?, data: String? ->
-        if (err != null) {
-            callback(null, IOException("Error while reading file $path", err))
-        } else {
-            callback(data!!, null)
-        }
-    }
-
-fun readTextAsync(path: String, callback: (String?, IOException?) -> Unit) =
-    if (Info.PLATFORM == Platform.BROWSER) {
-        browserReadTextAsync(path, callback)
-    } else {
-        nodeReadTextAsync(path, callback)
-    }
-
-@Suppress("UNUSED_PARAMETER")
-private fun browserReadBinAsync(path: String, callback: (ByteArray?, IOException?) -> Unit) =
-    callback(null, IOException("Reading a local file in browser is not supported, yet"))
-
-private fun nodeReadBinAsync(path: String, callback: (ByteArray?, IOException?) -> Unit) =
-    FS.readFile(path, READ_BINARY) { err: Throwable?, data: dynamic ->
-        if (err != null) {
-            callback(null, IOException("Error while reading file $path", err))
-        } else {
-            callback(toByteArray(data!!), null)
-        }
-    }
-
-fun readBinAsync(path: String, callback: (ByteArray?, IOException?) -> Unit) =
-    if (Info.PLATFORM == Platform.BROWSER) {
-        browserReadBinAsync(path, callback)
-    } else {
-        nodeReadBinAsync(path, callback)
-    }
-
-fun fetchTextAsync(url: String, callback: (String?, IOException?) -> Unit) {
-    fetch(url).then { req ->
-        req.text()
-            .then { callback(it, null) }
-            .catch { callback(null, IOException("Error while reading URL $url", it)) }
-    }.catch {
-        callback(null, IOException("Error while reading URL $url", it))
+suspend fun fetchText(url: String): String {
+    try {
+        val request = fetch(url).await()
+        val text = request.text().await()
+        return text
+    } catch (e: Throwable) {
+        throw IOException("Error while reading URL $url", e)
     }
 }
 
-fun fetchBinAsync(url: String, callback: (ByteArray?, IOException?) -> Unit) {
-    fetch(url).then { req ->
-        req.arrayBuffer()
-            .then { callback(it.toByteArray(), null) }
-            .catch { callback(null, IOException("Error while reading URL $url", it)) }
-    }.catch {
-        callback(null, IOException("Error while reading URL $url", it))
+suspend fun fetchByteArray(url: String): ByteArray {
+    try {
+        val request = fetch(url).await()
+        val data = request.arrayBuffer().await()
+        return data.toByteArray()
+    } catch (e: Throwable) {
+        throw IOException("Error while reading URL $url", e)
     }
 }

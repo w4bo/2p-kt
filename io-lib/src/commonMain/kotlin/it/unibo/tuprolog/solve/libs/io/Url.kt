@@ -20,17 +20,11 @@ interface Url {
     @JsName("query")
     val query: String?
 
-    @JsName("readAsTextAsync")
-    fun readAsTextAsync(callback: (String?, IOException?) -> Unit)
-
-    @JsName("readAsByteArrayAsync")
-    fun readAsByteArrayAsync(callback: (ByteArray?, IOException?) -> Unit)
-
     @JsName("readAsText")
-    fun readAsText(): String
+    suspend fun readAsText(): String
 
     @JsName("readAsByteArray")
-    fun readAsByteArray(): ByteArray
+    suspend fun readAsByteArray(): ByteArray
 
     @JsName("resolve")
     fun resolve(child: String): Url =
