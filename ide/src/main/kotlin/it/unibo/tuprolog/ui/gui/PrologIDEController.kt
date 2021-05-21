@@ -19,6 +19,7 @@ import javafx.scene.Node
 import javafx.scene.Parent
 import javafx.scene.control.Alert
 import javafx.scene.control.Button
+import javafx.scene.control.ComboBox
 import javafx.scene.control.Label
 import javafx.scene.control.ListView
 import javafx.scene.control.MenuItem
@@ -35,6 +36,7 @@ import javafx.scene.control.TreeView
 import javafx.scene.control.cell.PropertyValueFactory
 import javafx.scene.input.KeyEvent
 import javafx.scene.input.MouseEvent
+import javafx.scene.layout.BorderPane
 import javafx.scene.layout.Region
 import javafx.scene.text.Text
 import javafx.stage.FileChooser
@@ -73,7 +75,7 @@ class PrologIDEController : Initializable {
     private lateinit var lblCaret: Label
 
     @FXML
-    private lateinit var txfQuery: TextField
+    private lateinit var txfQuery: ComboBox<String>
 
     @FXML
     private lateinit var btnNext: Button
@@ -257,6 +259,8 @@ class PrologIDEController : Initializable {
         model.onTimeoutChanged.subscribe(this::onTimeoutChanged)
         model.onReset.subscribe(this::onReset)
         model.onQuit.subscribe(this::onQuit)
+
+        txfQuery.prefWidthProperty().bind((txfQuery.parent as BorderPane).widthProperty())
 
         sldTimeout.valueProperty().addListener { _, _, value -> onTimeoutSliderMoved(value) }
 
@@ -539,7 +543,12 @@ class PrologIDEController : Initializable {
 
     @FXML
     fun onKeyTypedOnQuery(e: KeyEvent) {
-        model.query = txfQuery.text
+        model.query = txfQuery.promptText
+    }
+
+    @FXML
+    fun onKeyPressedOnQuery(e: KeyEvent) {
+        model.query = txfQuery.promptText
     }
 
     @FXML
