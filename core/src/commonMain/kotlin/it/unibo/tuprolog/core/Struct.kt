@@ -20,7 +20,7 @@ import kotlin.collections.List as KtList
  * A [Struct] is characterised by a [functor] and a given (non-negative) amount of [args], namely [arity].
  * Each argument can be a [Term] of any sort.
  */
-interface Struct : Term {
+interface Struct : Composed {
 
     override val isStruct: Boolean
         get() = true
@@ -72,7 +72,6 @@ interface Struct : Term {
         get() = Indicator.FUNCTOR == functor && arity == 2
 
     override val variables: Sequence<Var>
-        get() = argsSequence.flatMap { it.variables }
 
     override fun freshCopy(): Struct
 
@@ -83,8 +82,7 @@ interface Struct : Term {
     /**
      * An alias for [addLast].
      */
-    @JsName("append")
-    fun append(argument: Term): Struct = addLast(argument)
+    override fun append(argument: Term): Struct
 
     /**
      * Creates a novel [Struct] which is a copy of the current one, expect that is has one more argument.
@@ -93,8 +91,7 @@ interface Struct : Term {
      * @return a new [Struct], whose [functor] is equals to the current one,
      * whose [arity] is greater than the current one, and whose last argument is [argument]
      */
-    @JsName("addLast")
-    fun addLast(argument: Term): Struct
+    override fun addLast(argument: Term): Struct
 
     /**
      * Creates a novel [Struct] which is a copy of the current one, expect that is has one more argument.
@@ -103,8 +100,7 @@ interface Struct : Term {
      * @return a new [Struct], whose [functor] is equals to the current one,
      * whose [arity] is greater than the current one, and whose first argument is [argument]
      */
-    @JsName("addFirst")
-    fun addFirst(argument: Term): Struct
+    override fun addFirst(argument: Term): Struct
 
     /**
      * Creates a novel [Struct] which is a copy of the current one, expect that is has one more argument.
@@ -116,23 +112,13 @@ interface Struct : Term {
      * @return a new [Struct], whose [functor] is equals to the current one,
      * whose [arity] is greater than the current one, and whose [index]-th argument is [argument]
      */
-    @JsName("insertAt")
-    fun insertAt(index: Int, argument: Term): Struct
-
-    /**
-     * Creates a novel [Struct] which is a copy of the current one, expect that is has a different functor.
-     * @param functor is a [String] representing the new functor
-     * @return a new [Struct], whose functor is [functor], and whose [arity] and arguments list are equal
-     * to the current one
-     */
-    @JsName("setFunctor")
-    fun setFunctor(functor: String): Struct
+    override fun insertAt(index: Int, argument: Term): Struct
 
     /**
      * The functor of this [Struct].
      */
     @JsName("functor")
-    val functor: String
+    override val functor: String
 
     /**
      * Returns `true` if and only if [functor] matches [Struct.WELL_FORMED_FUNCTOR_PATTERN].
@@ -141,57 +127,16 @@ interface Struct : Term {
     val isFunctorWellFormed: Boolean
 
     /**
-     * The total amount of arguments of this [Struct].
-     * This is equal to the length of [args].
-     */
-    @JsName("arity")
-    val arity: Int
-        get() = args.size
-
-    /**
      * The indicator corresponding to this [Struct], i.e. [functor]/[arity].
      */
-    @JsName("indicator")
-    val indicator: Indicator
+    override val indicator: Indicator
         get() = Indicator.of(functor, arity)
 
-    /**
-     * List of arguments of this [Struct].
-     */
-    @JsName("argsList")
-    val args: KtList<Term>
+    override fun setArgs(vararg args: Term): Struct
 
-    /**
-     * Sequence of arguments of this [Struct].
-     */
-    @JsName("argsSequence")
-    val argsSequence: Sequence<Term>
-        get() = args.asSequence()
+    override fun setArgs(args: Iterable<Term>): Struct
 
-    /**
-     * Gets the [index]-th argument if this [Struct].
-     * @param index is the index the argument which should be retrieved
-     * @throws IndexOutOfBoundsException if [index] is lower than 0 or greater or equal to [arity]
-     * @return the [Term] having position [index] in [args]
-     */
-    @JsName("getArgAt")
-    fun getArgAt(index: Int): Term = args[index]
-
-    @JsName("setArgs")
-    fun setArgs(vararg args: Term): Struct
-
-    @JsName("setArgsIterable")
-    fun setArgs(args: Iterable<Term>): Struct
-
-    @JsName("setArgsSequence")
-    fun setArgs(args: Sequence<Term>): Struct
-
-    /**
-     * Alias for [getArgAt].
-     * In Kotlin, this method enables the syntax `struct[index]`.
-     */
-    @JsName("get")
-    operator fun get(index: Int): Term = getArgAt(index)
+    override fun setArgs(args: Sequence<Term>): Struct
 
     companion object {
 

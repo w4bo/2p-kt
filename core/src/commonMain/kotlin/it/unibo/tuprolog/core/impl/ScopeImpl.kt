@@ -11,6 +11,7 @@ import it.unibo.tuprolog.core.Fact
 import it.unibo.tuprolog.core.Indicator
 import it.unibo.tuprolog.core.Integer
 import it.unibo.tuprolog.core.Numeric
+import it.unibo.tuprolog.core.Pattern
 import it.unibo.tuprolog.core.Real
 import it.unibo.tuprolog.core.Rule
 import it.unibo.tuprolog.core.Scope
@@ -142,6 +143,18 @@ internal class ScopeImpl(private val _variables: MutableMap<String, Var>) : Scop
 
     override fun structOf(functor: String, args: List<Term>): Struct =
         Struct.of(functor, args)
+
+    override fun patternOf(functor: Var, vararg args: Term): Pattern =
+        Pattern.of(functor, *args)
+
+    override fun patternOf(functor: Var, args: Sequence<Term>): Pattern =
+        Pattern.of(functor, args)
+
+    override fun patternOf(functor: Var, args: Iterable<Term>): Pattern =
+        Pattern.of(functor, args)
+
+    override fun patternOf(functor: Var, args: List<Term>): Pattern =
+        Pattern.of(functor, args)
 
     override fun factOf(head: Struct): Fact =
         Fact.of(head)

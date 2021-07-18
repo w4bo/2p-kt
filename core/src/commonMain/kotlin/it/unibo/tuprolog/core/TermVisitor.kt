@@ -16,8 +16,14 @@ interface TermVisitor<T> {
     @JsName("visitConstant")
     fun visitConstant(term: Constant): T = visitTerm(term)
 
+    @JsName("visitComposed")
+    fun visitComposed(term: Composed): T = visitTerm(term)
+
+    @JsName("visitPattern")
+    fun visitPattern(term: Composed): T = visitComposed(term)
+
     @JsName("visitStruct")
-    fun visitStruct(term: Struct): T = visitTerm(term)
+    fun visitStruct(term: Struct): T = visitComposed(term)
 
     @JsName("visitCollection")
     fun visitCollection(term: Recursive): T = visitStruct(term)

@@ -1,8 +1,8 @@
 package it.unibo.tuprolog.core.impl
 
+import it.unibo.tuprolog.core.Composed
 import it.unibo.tuprolog.core.Recursive
 import it.unibo.tuprolog.core.Scope
-import it.unibo.tuprolog.core.Struct
 import it.unibo.tuprolog.core.Term
 import it.unibo.tuprolog.core.TermVisitor
 import it.unibo.tuprolog.core.Var
@@ -39,14 +39,14 @@ internal abstract class RecursiveImpl(
 
     override fun freshCopy(scope: Scope): Recursive = super.freshCopy(scope).castToRecursive()
 
-    override fun itemsAreStructurallyEqual(other: Struct): Boolean =
+    override fun itemsAreStructurallyEqual(other: Composed): Boolean =
         other.asRecursive()?.let {
             itemWiseEquals(unfoldedSequence, it.unfoldedSequence) { a, b ->
                 a.structurallyEquals(b)
             }
         } ?: false
 
-    override fun itemsAreEqual(other: Struct, useVarCompleteName: Boolean): Boolean =
+    override fun itemsAreEqual(other: Composed, useVarCompleteName: Boolean): Boolean =
         other.asRecursive()?.let {
             itemWiseEquals(unfoldedSequence, it.unfoldedSequence) { a, b ->
                 a.equals(b, useVarCompleteName)

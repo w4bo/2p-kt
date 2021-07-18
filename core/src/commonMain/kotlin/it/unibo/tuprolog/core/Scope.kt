@@ -59,6 +59,18 @@ interface Scope {
     @JsName("structOfList")
     fun structOf(functor: String, args: List<Term>): Struct
 
+    @JsName("patternOf")
+    fun patternOf(functor: Var, vararg args: Term): Pattern
+
+    @JsName("patternOfSequence")
+    fun patternOf(functor: Var, args: Sequence<Term>): Pattern
+
+    @JsName("patternOfIterable")
+    fun patternOf(functor: Var, args: Iterable<Term>): Pattern
+
+    @JsName("patternOfList")
+    fun patternOf(functor: Var, args: List<Term>): Pattern
+
     @JsName("tupleOf")
     fun tupleOf(vararg terms: Term): Tuple
 

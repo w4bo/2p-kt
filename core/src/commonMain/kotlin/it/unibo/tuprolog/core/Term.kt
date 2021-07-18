@@ -98,6 +98,24 @@ interface Term : Comparable<Term>, Taggable<Term>, Castable<Term> {
     val isVar: Boolean get() = false
 
     /**
+     * Checks whether the current term is composed (i.e. either a structure or a pattern).
+     * This method is guaranteed to return `true` if and only if the current term
+     * is an instance of [Composed].
+     * @return `true` if the current term is a variable, or `false`, otherwise
+     */
+    @JsName("isComposed")
+    val isComposed: Boolean get() = false
+
+    /**
+     * Checks whether the current term is a pattern.
+     * This method is guaranteed to return `true` if and only if the current term
+     * is an instance of [Pattern].
+     * @return `true` if the current term is a variable, or `false`, otherwise
+     */
+    @JsName("isPattern")
+    val isPattern: Boolean get() = false
+
+    /**
      * Checks whether the current term is ground.
      * A term is ground is ground if and only if it does not contain any variable.
      * This method is guaranteed to return `true` if and only if the [variables] property
@@ -395,6 +413,24 @@ interface Term : Comparable<Term>, Taggable<Term>, Castable<Term> {
     fun <T> accept(visitor: TermVisitor<T>): T
 
     /**
+     * Casts the current [Term] to [Composed], if possible
+     * @throws ClassCastException if the current [Term] is not an instance of [Composed]
+     * @return the current [Term], casted to [Composed]
+     */
+    @JsName("castToComposed")
+    fun castToComposed(): Composed =
+        asComposed() ?: throw ClassCastException("Cannot cast $this to ${Composed::class.simpleName}")
+
+    /**
+     * Casts the current [Term] to [Pattern], if possible
+     * @throws ClassCastException if the current [Term] is not an instance of [Pattern]
+     * @return the current [Term], casted to [Pattern]
+     */
+    @JsName("castToPattern")
+    fun castToPattern(): Pattern =
+        asPattern() ?: throw ClassCastException("Cannot cast $this to ${Pattern::class.simpleName}")
+
+    /**
      * Casts the current [Term] to [Atom], if possible
      * @throws ClassCastException if the current [Term] is not an instance of [Atom]
      * @return the current [Term], casted to [Atom]
@@ -587,6 +623,20 @@ interface Term : Comparable<Term>, Taggable<Term>, Castable<Term> {
      */
     @JsName("asAtom")
     fun asAtom(): Atom? = null
+
+    /**
+     * Casts the current [Term] to [Composed], if possible, or returns `null` otherwise
+     * @return the current [Term], casted to [Composed], or `null`, if the current term is not an instance of [Composed]
+     */
+    @JsName("asComposed")
+    fun asComposed(): Composed? = null
+
+    /**
+     * Casts the current [Term] to [Pattern], if possible, or returns `null` otherwise
+     * @return the current [Term], casted to [Pattern], or `null`, if the current term is not an instance of [Pattern]
+     */
+    @JsName("asPattern")
+    fun asPattern(): Pattern? = null
 
     /**
      * Casts the current [Term] to [Clause], if possible, or returns `null` otherwise

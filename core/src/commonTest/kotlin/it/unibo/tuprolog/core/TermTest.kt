@@ -11,6 +11,8 @@ import kotlin.collections.List as KtList
 class TermTest {
 
     private data class MyStruct(override val functor: String, override val args: KtList<Term>) : Struct {
+        override val variables: Sequence<Var>
+            get() = args.asSequence().flatMap { it.variables }
 
         override fun freshCopy(): Struct {
             return freshCopy(Scope.empty())
@@ -20,6 +22,8 @@ class TermTest {
             return MyStruct(functor, args.map { it.freshCopy(scope) })
         }
 
+        override fun append(argument: Term): Struct = addLast(argument)
+
         override fun addLast(argument: Term): Struct = throw NotImplementedError()
 
         override fun addFirst(argument: Term): Struct = throw NotImplementedError()
@@ -27,6 +31,8 @@ class TermTest {
         override fun insertAt(index: Int, argument: Term): Struct = throw NotImplementedError()
 
         override fun setFunctor(functor: String): Struct = throw NotImplementedError()
+
+        override fun setFunctor(functor: Var): Pattern = throw NotImplementedError()
 
         override val isFunctorWellFormed: Boolean
             get() = Struct.isWellFormedFunctor(functor)
