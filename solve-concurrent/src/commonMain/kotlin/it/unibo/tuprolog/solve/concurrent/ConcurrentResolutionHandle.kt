@@ -22,9 +22,7 @@ data class ConcurrentResolutionHandle(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     fun terminateResolution(resolutionScope: CoroutineScope) {
-        if (!solutionChannel.isClosedForSend) {
-            solutionChannel.close()
-        }
+        closeSolutionChannelIfNeeded()
         resolutionScope.cancel("Solution limit has been reached: ${solveOptions.limit}")
     }
 
@@ -46,27 +44,33 @@ data class ConcurrentResolutionHandle(
         get() = solutionChannel.isClosedForSend
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    fun closeSolutionChannel(): Boolean {
-        if (!isSolutionChannelClosed) {
-            solutionChannel.close()
-            return true
-        }
-        return false
-    }
-
-    suspend fun publishNoSolution(goal: Struct) {
-        solutionChannel.send(Solution.no(goal))
-    }
+    val shouldSolutionChannelBeClosed: Boolean
+        get() = solveOptions.customOptions["keepChannelOpen"] == true
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    suspend fun closeSolutionChannelWithNoSolutionIfNeeded(goal: Struct): Boolean {
-        if (!isSolutionChannelClosed) {
-            if (solutionCounter.value == 0) {
-                publishNoSolution(goal)
-            }
+    fun closeSolutionChannelIfNeeded(): Boolean {
+        if (shouldSolutionChannelBeClosed && !isSolutionChannelClosed) {
             solutionChannel.close()
             return true
         }
         return false
     }
+
+    suspend fun publishNoSolutionIfNeeded(goal: Struct) {
+        if (solutionCounter.value == 0) {
+            solutionChannel.send(Solution.no(goal))
+        }
+    }
+
+    // @OptIn(ExperimentalCoroutinesApi::class)
+    // suspend fun closeSolutionChannelWithNoSolutionIfNeeded(goal: Struct): Boolean {
+    //     if (!isSolutionChannelClosed) {
+    //         if (solutionCounter.value == 0) {
+    //             publishNoSolution(goal)
+    //         }
+    //         solutionChannel.close()
+    //         return true
+    //     }
+    //     return false
+    // }
 }

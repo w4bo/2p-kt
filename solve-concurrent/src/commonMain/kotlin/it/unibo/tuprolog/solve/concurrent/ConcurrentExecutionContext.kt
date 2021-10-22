@@ -90,7 +90,7 @@ data class ConcurrentExecutionContext(
         dynamicKb: Theory,
         inputChannels: InputStore,
         outputChannels: OutputStore
-    ): Solver = ConcurrentSolverImpl(libraries, flags, staticKb, dynamicKb, inputChannels, outputChannels, trustKb = true) // ConcurrentSolver is not a subtype of Solver
+    ): ConcurrentSolver = ConcurrentSolverImpl(libraries, flags, staticKb, dynamicKb, inputChannels, outputChannels, trustKb = true) // ConcurrentSolver is not a subtype of Solver
 
     override fun createMutableSolver(
         libraries: Libraries,

@@ -9,6 +9,12 @@ import it.unibo.tuprolog.solve.stdlib.magic.MagicCut
 import kotlin.collections.List as KtList
 import kotlin.collections.listOf as ktListOf
 
+/*
+ * ;(->(Cond, Then), Else) :- call(Cond), !, call(Then).
+ * ;(->(Cond, Then), Else) :- !, call(Else).
+ * ;(A, B) :- call(A).
+ * ;(A, B) :- call(B).
+ */
 sealed class Semicolon : RuleWrapper<ExecutionContext>(FUNCTOR, ARITY) {
 
     abstract override val Scope.head: KtList<Term>

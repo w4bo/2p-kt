@@ -8,6 +8,9 @@ import it.unibo.tuprolog.solve.stdlib.magic.MagicCut
 import kotlin.collections.List as KtList
 import kotlin.collections.listOf as ktListOf
 
+/*
+ * ->(Cond, Then) :- call(Cond), !, call(Then).
+ */
 object Arrow : RuleWrapper<ExecutionContext>("->", 2) {
     override val Scope.head: KtList<Term>
         get() = ktListOf(varOf("Cond"), varOf("Then"))

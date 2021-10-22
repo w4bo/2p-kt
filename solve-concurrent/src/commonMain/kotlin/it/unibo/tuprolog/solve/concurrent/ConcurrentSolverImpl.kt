@@ -85,7 +85,8 @@ internal open class ConcurrentSolverImpl(
 
     private suspend fun startAsyncResolution(initialState: State, handle: ConcurrentResolutionHandle) = coroutineScope {
         handleAsyncStateTransition(initialState, handle).join()
-        handle.closeSolutionChannelWithNoSolutionIfNeeded(initialState.context.query)
+        handle.publishNoSolutionIfNeeded(initialState.context.query)
+        handle.closeSolutionChannelIfNeeded()
     }
 
     private fun initialState(goal: Struct, options: SolveOptions): State {
@@ -107,8 +108,11 @@ internal open class ConcurrentSolverImpl(
         return StateGoalSelection(currentContext)
     }
 
-    override fun solveConcurrently(goal: Struct, options: SolveOptions): ReceiveChannel<Solution> {
-        val channel = KtChannel<Solution>(KtChannel.UNLIMITED)
+    override fun solveConcurrently(
+        goal: Struct,
+        options: SolveOptions,
+        channel: KtChannel<Solution>
+    ): ReceiveChannel<Solution> {
         val initialState = initialState(goal, options)
         val handle = ConcurrentResolutionHandle(options, channel)
         val resolutionScope = CoroutineScope(Dispatchers.Default)

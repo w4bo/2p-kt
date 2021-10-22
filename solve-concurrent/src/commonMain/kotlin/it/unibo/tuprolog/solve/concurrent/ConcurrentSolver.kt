@@ -11,6 +11,7 @@ import it.unibo.tuprolog.solve.exception.Warning
 import it.unibo.tuprolog.solve.flags.FlagStore
 import it.unibo.tuprolog.solve.library.Libraries
 import it.unibo.tuprolog.theory.Theory
+import kotlinx.coroutines.channels.Channel as KtChannel
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlin.js.JsName
 
@@ -18,8 +19,12 @@ interface ConcurrentSolver : Solver {
 
     // val resolutionScope: CoroutineScope
 
+    @JsName("solveConcurrentlyWithChannel")
+    fun solveConcurrently(goal: Struct, options: SolveOptions, channel: KtChannel<Solution>): ReceiveChannel<Solution>
+
     @JsName("solveConcurrently")
-    fun solveConcurrently(goal: Struct, options: SolveOptions): ReceiveChannel<Solution>
+    fun solveConcurrently(goal: Struct, options: SolveOptions): ReceiveChannel<Solution> =
+        solveConcurrently(goal, options, KtChannel(KtChannel.UNLIMITED))
 
     override fun solveOnce(goal: Struct, timeout: TimeDuration): Solution =
         solve(goal, SolveOptions.someLazilyWithTimeout(1, timeout))
